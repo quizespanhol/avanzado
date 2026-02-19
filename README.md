@@ -1,554 +1,705 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-  <base target="_top">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      font-family: 'Arial', 'Helvetica', sans-serif;
-      background: #000000; /* PRETO */
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px;
-      position: relative;
-    }
-    
-    .quiz-container {
-      width: 100%;
-      max-width: 400px;
-      background: #f0f0f0; /* CINZA CLARO BEM CLARO */
-      border-radius: 25px;
-      padding: 20px;
-      box-shadow: 0 10px 25px rgba(255,255,255,0.1);
-      border: 2px solid #ffffff;
-      position: relative;
-      z-index: 1;
-    }
-    
-    /* Header com "Quiz" centralizado */
-    .quiz-header {
-      margin-bottom: 25px;
-      text-align: center;
-      position: relative;
-    }
-    
-    .quiz-title {
-      color: #000000; /* PRETO */
-      font-size: 48px;
-      font-weight: bold;
-      letter-spacing: 2px;
-      text-shadow: 2px 2px 0 #cccccc;
-      line-height: 1;
-      text-align: center;
-    }
-    
-    /* Área da pergunta */
-    .question-area {
-      background: #ffffff; /* BRANCO */
-      border-radius: 15px;
-      padding: 25px 15px;
-      margin-bottom: 25px;
-      border: 2px solid #000000;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
-    }
-    
-    .question-text {
-      color: #000000; /* PRETO */
-      font-size: 24px;
-      font-weight: 600;
-      text-align: center;
-      line-height: 1.3;
-      word-break: break-word;
-    }
-    
-    /* Opções de resposta */
-    .options-container {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 25px;
-    }
-    
-    .option-btn {
-      background: #ffffff; /* BRANCO */
-      border: 2px solid #000000; /* PRETO */
-      border-radius: 15px;
-      padding: 18px 15px;
-      color: #000000; /* PRETO */
-      font-size: 20px;
-      font-weight: 500;
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      width: 100%;
-      display: block;
-      box-shadow: 0 4px 0 #cccccc; /* CINZA CLARO */
-    }
-    
-    .option-btn:active {
-      transform: translateY(2px);
-      box-shadow: 0 2px 0 #cccccc;
-    }
-    
-    /* Estilo quando selecionada */
-    .option-btn.selected {
-      background: #e0e0e0; /* CINZA MÉDIO */
-      border-color: #000000;
-      color: #000000;
-      box-shadow: 0 4px 0 #aaaaaa;
-    }
-    
-    .option-btn.selected .option-prefix {
-      background: #f0f0f0;
-      color: #000000;
-    }
-    
-    .option-btn.correct {
-      background: #4CAF50; /* VERDE */
-      border-color: #2e7d32;
-      color: #ffffff;
-      box-shadow: 0 4px 0 #1b5e20;
-    }
-    
-    .option-btn.incorrect {
-      background: #f44336; /* VERMELHO */
-      border-color: #c62828;
-      color: #ffffff;
-      box-shadow: 0 4px 0 #8b0000;
-    }
-    
-    .option-btn:disabled {
-      opacity: 0.9;
-      cursor: default;
-      transform: none;
-    }
-    
-    /* Letras das opções (A, B, C) */
-    .option-prefix {
-      display: inline-block;
-      width: 40px;
-      height: 40px;
-      background: #f0f0f0; /* CINZA CLARO */
-      color: #000000; /* PRETO */
-      border-radius: 10px;
-      text-align: center;
-      line-height: 40px;
-      font-size: 24px;
-      font-weight: bold;
-      margin-right: 15px;
-      box-shadow: inset 0 -2px 0 #cccccc;
-      border: 1px solid #000000;
-    }
-    
-    /* Timer */
-    .timer-container {
-      text-align: center;
-      margin-bottom: 15px;
-    }
-    
-    .timer {
-      display: inline-block;
-      background: #ffffff; /* BRANCO */
-      color: #000000; /* PRETO */
-      font-size: 32px;
-      font-weight: bold;
-      padding: 10px 25px;
-      border-radius: 50px;
-      border: 2px solid #000000;
-      box-shadow: 0 4px 0 #cccccc;
-    }
-    
-    /* Loading overlay */
-    .loading-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.9); /* PRETO */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      display: none;
-    }
-    
-    .loading-content {
-      background: #f0f0f0; /* CINZA CLARO */
-      padding: 30px;
-      border-radius: 20px;
-      text-align: center;
-      color: #000000; /* PRETO */
-      border: 2px solid #ffffff;
-    }
-    
-    .loading-spinner {
-      width: 50px;
-      height: 50px;
-      border: 5px solid #cccccc;
-      border-top-color: #000000;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin: 20px auto;
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
-    /* Tela de resultados */
-    .result-screen {
-      text-align: center;
-    }
-    
-    .final-score {
-      background: #ffffff; /* BRANCO */
-      border-radius: 20px;
-      padding: 30px;
-      margin: 20px 0;
-      border: 2px solid #000000;
-    }
-    
-    .score-number {
-      font-size: 80px;
-      font-weight: bold;
-      color: #000000; /* PRETO */
-      line-height: 1;
-      margin: 10px 0;
-    }
-    
-    .score-label {
-      color: #000000; /* PRETO */
-      font-size: 24px;
-    }
-    
-    .action-btn {
-      background: #ffffff; /* BRANCO */
-      border: none;
-      border-radius: 15px;
-      padding: 18px;
-      color: #000000; /* PRETO */
-      font-size: 24px;
-      font-weight: bold;
-      cursor: pointer;
-      width: 100%;
-      margin: 10px 0;
-      box-shadow: 0 4px 0 #cccccc;
-      transition: all 0.1s ease;
-      border: 2px solid #000000;
-    }
-    
-    .action-btn:active {
-      transform: translateY(2px);
-      box-shadow: 0 2px 0 #cccccc;
-    }
-    
-    .action-btn.secondary {
-      background: #e0e0e0; /* CINZA MÉDIO */
-      color: #000000; /* PRETO */
-      border: 2px solid #000000;
-      box-shadow: 0 4px 0 #aaaaaa;
-    }
-    
-    .name-input {
-      width: 100%;
-      padding: 15px;
-      font-size: 18px;
-      border-radius: 15px;
-      border: 2px solid #000000;
-      background: #ffffff;
-      color: #000000;
-      margin: 10px 0;
-    }
-    
-    .name-input::placeholder {
-      color: #666666;
-    }
-    
-    /* Ajustes para mobile */
-    @media (max-width: 400px) {
-      .quiz-title {
-        font-size: 42px;
-      }
-      
-      .question-text {
-        font-size: 22px;
-      }
-      
-      .option-btn {
-        font-size: 18px;
-        padding: 15px;
-      }
-      
-      .option-prefix {
-        width: 35px;
-        height: 35px;
-        font-size: 20px;
-        line-height: 35px;
-        margin-right: 10px;
-      }
-    }
-  </style>
-  
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Español Avanzado - Quiz para Brasileiros</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background: linear-gradient(135deg, #ff0000 0%, #8b0000 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+        
+        .quiz-container {
+            width: 100%;
+            max-width: 550px;
+            background: #ffffff;
+            border-radius: 30px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 3px solid #ffd700;
+        }
+        
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .quiz-title {
+            color: #ff0000;
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 0 #ffd700;
+        }
+        
+        .progress-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            background: #fff5f5;
+            border-radius: 60px;
+            border: 2px solid #ffd700;
+        }
+        
+        .question-counter {
+            background: #ff0000;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 8px 20px;
+            border-radius: 40px;
+            border: 2px solid #ffd700;
+        }
+        
+        .progress-bar {
+            flex: 1;
+            height: 20px;
+            background: #ffcccc;
+            border-radius: 30px;
+            margin: 0 15px;
+            overflow: hidden;
+            border: 1px solid #ffd700;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0000, #ffd700);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 30px;
+        }
+        
+        .category-badge {
+            background: #8b0000;
+            color: white;
+            font-size: 14px;
+            padding: 5px 15px;
+            border-radius: 30px;
+            border: 1px solid #ffd700;
+        }
+        
+        .level-indicator {
+            background: #ff0000;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            padding: 8px 25px;
+            border-radius: 50px;
+            display: inline-block;
+            box-shadow: 0 4px 10px rgba(255,0,0,0.3);
+            border: 2px solid #ffd700;
+            margin-top: 10px;
+        }
+        
+        .timer-container {
+            text-align: center;
+            margin: 15px 0;
+        }
+        
+        .timer {
+            display: inline-block;
+            background: #8b0000;
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+            padding: 12px 30px;
+            border-radius: 60px;
+            border: 2px solid #ffd700;
+            box-shadow: 0 4px 15px rgba(139,0,0,0.5);
+        }
+        
+        .question-area {
+            background: #fff5f5;
+            border-radius: 20px;
+            padding: 30px 20px;
+            margin-bottom: 25px;
+            border-left: 5px solid #ff0000;
+            border-right: 5px solid #ffd700;
+            box-shadow: 0 5px 15px rgba(255,0,0,0.1);
+        }
+        
+        .question-text {
+            color: #8b0000;
+            font-size: 22px;
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.5;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        
+        .option-btn {
+            background: white;
+            border: 2px solid #ffcccc;
+            border-radius: 15px;
+            padding: 18px 20px;
+            color: #8b0000;
+            font-size: 18px;
+            font-weight: 500;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            display: block;
+            box-shadow: 0 4px 6px rgba(255,0,0,0.1);
+        }
+        
+        .option-btn:hover:not(:disabled) {
+            background: #ffe6e6;
+            border-color: #ff0000;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255,0,0,0.2);
+        }
+        
+        .option-btn.selected {
+            background: #ffcccc;
+            border-color: #ff0000;
+            box-shadow: 0 4px 0 #8b0000;
+        }
+        
+        .option-btn.correct {
+            background: #4CAF50;
+            border-color: #ffd700;
+            color: white;
+            box-shadow: 0 4px 0 #2d6a2d;
+        }
+        
+        .option-btn.incorrect {
+            background: #f44336;
+            border-color: #ffd700;
+            color: white;
+            box-shadow: 0 4px 0 #9a2828;
+        }
+        
+        .option-btn:disabled {
+            opacity: 0.9;
+            cursor: default;
+            transform: none;
+        }
+        
+        .option-prefix {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            background: #ff0000;
+            color: white;
+            border-radius: 10px;
+            text-align: center;
+            line-height: 35px;
+            font-size: 20px;
+            font-weight: bold;
+            margin-right: 15px;
+            border: 1px solid #ffd700;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .loading-content {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            text-align: center;
+            border: 3px solid #ff0000;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #ffcccc;
+            border-top-color: #ff0000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .result-screen {
+            text-align: center;
+        }
+        
+        .final-score {
+            background: linear-gradient(135deg, #ff0000, #8b0000);
+            border-radius: 25px;
+            padding: 35px;
+            margin: 20px 0;
+            color: white;
+            border: 3px solid #ffd700;
+        }
+        
+        .score-number {
+            font-size: 90px;
+            font-weight: bold;
+            line-height: 1;
+            margin: 15px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .score-label {
+            font-size: 28px;
+            opacity: 0.9;
+        }
+        
+        .level-result {
+            font-size: 26px;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255,215,0,0.2);
+            border-radius: 60px;
+            border: 2px solid #ffd700;
+        }
+        
+        .action-btn {
+            background: white;
+            border: none;
+            border-radius: 15px;
+            padding: 18px;
+            color: #8b0000;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 12px 0;
+            box-shadow: 0 4px 10px rgba(255,0,0,0.2);
+            border: 2px solid #ffd700;
+            transition: all 0.2s ease;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255,215,0,0.4);
+            background: #fff0f0;
+        }
+        
+        .action-btn.secondary {
+            background: #fff5f5;
+        }
+        
+        .name-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 15px;
+            border: 2px solid #ffd700;
+            margin: 10px 0;
+            transition: all 0.2s ease;
+        }
+        
+        .name-input:focus {
+            outline: none;
+            border-color: #ff0000;
+            box-shadow: 0 0 0 3px rgba(255,215,0,0.3);
+        }
+        
+        @media (max-width: 480px) {
+            .quiz-title { font-size: 36px; }
+            .question-text { font-size: 20px; }
+            .option-btn { font-size: 16px; padding: 15px; }
+            .score-number { font-size: 70px; }
+            .progress-container { flex-direction: column; gap: 10px; }
+            .progress-bar { width: 100%; margin: 10px 0; }
+        }
+    </style>
 </head>
 <body>
-  <div class="quiz-container">
-    <div id="quizContent"></div>
-  </div>
-  
-  <div id="loading" class="loading-overlay">
-    <div class="loading-content">
-      <div class="loading-spinner"></div>
-      <div style="font-size: 18px;">Carregando...</div>
+    <div class="quiz-container">
+        <div id="quizContent"></div>
     </div>
-  </div>
 
-  <script>
-    // Links (você pode alterar conforme necessário)
-    const shopeeLink = "https://s.shopee.com.br/70DpcjasH2";
-    const resultadosLink = "https://s.shopee.com.br/70DpcjasH2";
+    <div id="loading" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div style="font-size: 20px; color: #8b0000;">Cargando...</div>
+        </div>
+    </div>
 
-    // ===== 10 PERGUNTAS SOBRE ESPANHOL PARA BRASILEIROS =====
-    const questions = [
-      {
-        question: "🇪🇸 Em espanhol, 'embarazada' significa:",
-        options: ["Com vergonha", "Grávida", "Atrapalhada", "Embaraçada"],
-        answer: 2
-      },
-      {
-        question: "🇪🇸 Qual o significado de 'coger' na maioria dos países hispânicos?",
-        options: ["Pegar", "Coçar", "Sentido vulgar", "Cozinhar"],
-        answer: 3
-      },
-      {
-        question: "🇪🇸 'Éxito' em espanhol quer dizer:",
-        options: ["Saída", "Sucesso", "Exit", "Exercício"],
-        answer: 2
-      },
-      {
-        question: "🇪🇸 Como se diz 'escritório' em espanhol?",
-        options: ["Escritorio", "Oficina", "Despacho", "Negocio"],
-        answer: 2
-      },
-      {
-        question: "🇪🇸 'Constipado' em espanhol significa:",
-        options: ["Intestino preso", "Resfriado", "Prisão de ventre", "Constipação"],
-        answer: 2
-      },
-      {
-        question: "🇪🇸 Qual a tradução de 'borracha' para o espanhol?",
-        options: ["Boracha", "Goma", "Caucho", "Borracha"],
-        answer: 2
-      },
-      {
-        question: "🇪🇸 'Pelado' em espanhol pode significar:",
-        options: ["Sem roupa", "Careca", "Descascado", "Sem dinheiro"],
-        answer: 4
-      },
-      {
-        question: "🇪🇸 Como se fala 'brincadeira' em espanhol?",
-        options: ["Brincadeira", "Broma", "Juego", "Diversión"],
-        answer: 2
-      },
-      {
-        question: "🇪🇸 'Rato' em espanhol significa:",
-        options: ["Rato animal", "Momento", "Mouse", "Ratazana"],
-        answer: 2
-      },
-      {
-        question: "🇪🇸 Qual frase está gramaticalmente correta?",
-        options: ["Me llamo es Juan", "Yo llamo Juan", "Me llamo Juan", "Mi llamo Juan"],
-        answer: 3
-      }
-    ];
+    <script>
+        // LINKS DE REDIRECIONAMENTO
+        const SHOPEE_LINK = "https://s.shopee.com.br/70DpcjasH2";
+        const RESULTADOS_LINK = "https://s.shopee.com.br/70DpcjasH2";
 
-    let current = 0;
-    let score = 0;
-    let answered = false;
-    let userAnswers = [];
-    let timer;
-    let timeLeft = 30;
+        // ===== 20 PERGUNTAS AVANÇADAS DE ESPANHOL =====
+        const questions = [
+            // SUBJUNTIVO E TEMPOS VERBAIS (1-5)
+            {
+                question: "🇪🇸 Complete con el subjuntivo: 'Espero que ___ buen viaje.'",
+                options: ["tengas", "tienes", "tener", "tenías"],
+                answer: 1,
+                category: "Subjuntivo"
+            },
+            {
+                question: "🇪🇸 ¿Cuál es la forma correcta? 'Si ___ dinero, viajaría por el mundo.'",
+                options: ["tuviera", "tengo", "tendría", "tener"],
+                answer: 1,
+                category: "Condicional"
+            },
+            {
+                question: "🇪🇸 Pretérito perfecto: 'Ya ___ (comer) cuando llegaste.'",
+                options: ["he comido", "había comido", "comí", "comeré"],
+                answer: 2,
+                category: "Pluscuamperfecto"
+            },
+            {
+                question: "🇪🇸 Subjuntivo imperfecto: 'Ojalá ___ (venir) más temprano.'",
+                options: ["viniera", "venga", "vendría", "vino"],
+                answer: 1,
+                category: "Subjuntivo"
+            },
+            {
+                question: "🇪🇸 Futuro perfecto: 'Para el año que viene, ya ___ (terminar) la carrera.'",
+                options: ["habré terminado", "terminaré", "he terminado", "terminaba"],
+                answer: 1,
+                category: "Futuro Perfecto"
+            },
+            
+            // EXPRESSÕES IDIOMÁTICAS (6-10)
+            {
+                question: "🇪🇸 ¿Qué significa 'tomar el pelo'?",
+                options: ["Cortar el cabello", "Bromear/Engañar", "Peinarse", "Tener vergüenza"],
+                answer: 2,
+                category: "Expresiones"
+            },
+            {
+                question: "🇪🇸 'Estar en las nubes' significa:",
+                options: ["Estar distraído", "Viajar en avión", "Estar feliz", "Tener sueño"],
+                answer: 1,
+                category: "Expresiones"
+            },
+            {
+                question: "🇪🇸 ¿Qué es 'una ganga'?",
+                options: ["Una pandilla", "Una oferta/Baratija", "Una fruta", "Un problema"],
+                answer: 2,
+                category: "Expresiones"
+            },
+            {
+                question: "🇪🇸 'Meter la pata' quiere decir:",
+                options: ["Cometer un error", "Patear", "Entrar en un lugar", "Bailar"],
+                answer: 1,
+                category: "Expresiones"
+            },
+            {
+                question: "🇪🇸 'Ser un lince' significa:",
+                options: ["Ser muy astuto", "Ser un animal", "Ser perezoso", "Ser rápido"],
+                answer: 1,
+                category: "Expresiones"
+            },
+            
+            // FALSOS COGNATOS AVANÇADOS (11-15)
+            {
+                question: "🇪🇸 'Constipado' en español significa:",
+                options: ["Constipado (intestino)", "Resfriado", "Estreñido", "Congestionado"],
+                answer: 2,
+                category: "Falsos Cognatos"
+            },
+            {
+                question: "🇪🇸 'Embargado' quiere decir:",
+                options: ["Con vergüenza", "Bloqueado/Retenido", "Embarazado", "Abrazado"],
+                answer: 2,
+                category: "Falsos Cognatos"
+            },
+            {
+                question: "🇪🇸 'Bizarro' en español significa:",
+                options: ["Extraño/Raro", "Valiente", "Bizarro (estilo)", "Divertido"],
+                answer: 2,
+                category: "Falsos Cognatos"
+            },
+            {
+                question: "🇪🇸 'Exitoso' quiere decir:",
+                options: ["Saída", "Bem-sucedido", "Exercício", "Exit"],
+                answer: 2,
+                category: "Falsos Cognatos"
+            },
+            {
+                question: "🇪🇸 'Sensato' significa:",
+                options: ["Sensível", "Sensato/Juicioso", "Sensacional", "Sensível demais"],
+                answer: 2,
+                category: "Falsos Cognatos"
+            },
+            
+            // GRAMÁTICA AVANÇADA (16-20)
+            {
+                question: "🇪🇸 'Le' en 'Le di el libro' es un:",
+                options: ["Objeto directo", "Objeto indirecto", "Pronombre reflexivo", "Artículo"],
+                answer: 2,
+                category: "Gramática"
+            },
+            {
+                question: "🇪🇸 'Se lo dije' - ¿Qué función tiene 'se'?",
+                options: ["Reflexivo", "Sustituto de 'le'", "Impersonal", "Pasivo"],
+                answer: 2,
+                category: "Gramática"
+            },
+            {
+                question: "🇪🇸 'Cuyo' en 'El hombre cuyo hijo llegó' se refiere a:",
+                options: ["El hombre", "El hijo", "Llegó", "Hombre e hijo"],
+                answer: 1,
+                category: "Gramática"
+            },
+            {
+                question: "🇪🇸 'Quizás ___ a tiempo' (llegar) - forma correcta:",
+                options: ["llegue", "llega", "llegará", "llegaba"],
+                answer: 1,
+                category: "Gramática"
+            },
+            {
+                question: "🇪🇸 'A pesar de ___ estudiado, no aprobó' - forma correcta:",
+                options: ["haber", "había", "ha", "habrá"],
+                answer: 1,
+                category: "Gramática"
+            }
+        ];
 
-    function startTimer() {
-      clearInterval(timer);
-      timeLeft = 30;
-      updateTimerDisplay();
-      
-      timer = setInterval(() => {
-        timeLeft--;
-        updateTimerDisplay();
-        
-        if (timeLeft <= 0) {
-          clearInterval(timer);
-          if (!answered) {
-            userAnswers.push(0);
-            nextQuestion();
-          }
+        const TOTAL_QUESTIONS = questions.length;
+        let current = 0;
+        let score = 0;
+        let answered = false;
+        let userAnswers = [];
+        let timer;
+        let timeLeft = 50;
+
+        function updateProgress() {
+            const progressFill = document.querySelector('.progress-fill');
+            const questionCounter = document.querySelector('.question-counter');
+            const categoryBadge = document.querySelector('.category-badge');
+            
+            if (progressFill) {
+                const progress = ((current + 1) / TOTAL_QUESTIONS) * 100;
+                progressFill.style.width = `${progress}%`;
+            }
+            
+            if (questionCounter) {
+                questionCounter.textContent = `${current + 1}/${TOTAL_QUESTIONS}`;
+            }
+            
+            if (categoryBadge && current < TOTAL_QUESTIONS) {
+                categoryBadge.textContent = questions[current].category;
+            }
         }
-      }, 1000);
-    }
 
-    function updateTimerDisplay() {
-      const timerEl = document.getElementById('timer');
-      if (timerEl) {
-        timerEl.textContent = `⏳ ${timeLeft}s`;
-      }
-    }
-
-    function showQuestion() {
-      answered = false;
-      const q = questions[current];
-      
-      let html = `
-        <div class="quiz-header">
-          <div class="quiz-title">QUIZ</div>
-        </div>
-        
-        <div class="timer-container">
-          <div class="timer" id="timer">⏳ 30s</div>
-        </div>
-        
-        <div class="question-area">
-          <div class="question-text">${q.question}</div>
-        </div>
-        
-        <div class="options-container" id="optionsContainer">
-      `;
-      
-      const letters = ['A', 'B', 'C', 'D'];
-      q.options.forEach((opt, i) => {
-        html += `
-          <button class="option-btn" onclick="selectOption(${i+1})">
-            <span class="option-prefix">${letters[i]}</span>
-            ${opt}
-          </button>
-        `;
-      });
-      
-      html += `</div>`;
-      
-      document.getElementById('quizContent').innerHTML = html;
-      startTimer();
-    }
-
-    function selectOption(selected) {
-      if (answered) return;
-      answered = true;
-      clearInterval(timer);
-      
-      const correct = questions[current].answer;
-      const buttons = document.querySelectorAll('.option-btn');
-      
-      buttons.forEach(b => b.classList.remove('selected', 'correct', 'incorrect'));
-      
-      buttons[selected-1].classList.add('selected');
-      
-      setTimeout(() => {
-        buttons.forEach((btn, i) => {
-          if (i+1 === correct) {
-            btn.classList.add('correct');
-          } else if (i+1 === selected && selected !== correct) {
-            btn.classList.add('incorrect');
-          }
-          btn.disabled = true;
-        });
-        
-        userAnswers.push(selected);
-        if (selected === correct) {
-          score++;
-          confetti({
-            particleCount: 50,
-            spread: 60,
-            colors: ['#000000', '#f0f0f0']
-          });
+        function startTimer() {
+            clearInterval(timer);
+            timeLeft = 50;
+            updateTimerDisplay();
+            
+            timer = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    if (!answered) {
+                        userAnswers.push(0);
+                        nextQuestion();
+                    }
+                }
+            }, 1000);
         }
-        
-        setTimeout(nextQuestion, 800);
-      }, 300);
-    }
 
-    function nextQuestion() {
-      current++;
-      if (current < questions.length) {
+        function updateTimerDisplay() {
+            const timerEl = document.getElementById('timer');
+            if (timerEl) timerEl.textContent = `⏳ ${timeLeft}s`;
+        }
+
+        function showQuestion() {
+            answered = false;
+            const q = questions[current];
+            
+            let html = `
+                <div class="quiz-header">
+                    <div class="quiz-title">🇪🇸 ESPAÑOL AVANZADO</div>
+                    
+                    <div class="progress-container">
+                        <div class="question-counter">${current + 1}/${TOTAL_QUESTIONS}</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${((current + 1) / TOTAL_QUESTIONS) * 100}%"></div>
+                        </div>
+                        <div class="category-badge">${q.category}</div>
+                    </div>
+                    
+                    <div class="timer-container">
+                        <div class="timer" id="timer">⏳ 50s</div>
+                    </div>
+                </div>
+                
+                <div class="question-area">
+                    <div class="question-text">${q.question}</div>
+                </div>
+                
+                <div class="options-container" id="optionsContainer">
+            `;
+            
+            const letters = ['A', 'B', 'C', 'D'];
+            q.options.forEach((opt, i) => {
+                html += `
+                    <button class="option-btn" onclick="selectOption(${i+1})">
+                        <span class="option-prefix">${letters[i]}</span>
+                        ${opt}
+                    </button>
+                `;
+            });
+            
+            html += `</div>`;
+            
+            document.getElementById('quizContent').innerHTML = html;
+            startTimer();
+        }
+
+        function selectOption(selected) {
+            if (answered) return;
+            answered = true;
+            clearInterval(timer);
+            
+            const correct = questions[current].answer;
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            buttons.forEach(b => b.classList.remove('selected', 'correct', 'incorrect'));
+            buttons[selected-1].classList.add('selected');
+            
+            setTimeout(() => {
+                buttons.forEach((btn, i) => {
+                    if (i+1 === correct) {
+                        btn.classList.add('correct');
+                    } else if (i+1 === selected && selected !== correct) {
+                        btn.classList.add('incorrect');
+                    }
+                    btn.disabled = true;
+                });
+                
+                userAnswers.push(selected);
+                if (selected === correct) {
+                    score++;
+                    confetti({
+                        particleCount: 30,
+                        spread: 50,
+                        colors: ['#ff0000', '#ffd700']
+                    });
+                }
+                
+                setTimeout(nextQuestion, 800);
+            }, 300);
+        }
+
+        function nextQuestion() {
+            current++;
+            if (current < questions.length) {
+                showQuestion();
+            } else {
+                showFinalScreen();
+            }
+        }
+
+        function showFinalScreen() {
+            let levelMessage = "";
+            let levelEmoji = "";
+            
+            if (score >= 16) {
+                levelMessage = "MAESTRO - ¡Excelente! 🌟";
+                levelEmoji = "🏆";
+                confetti({ particleCount: 200, spread: 120, colors: ['#ff0000', '#ffd700'] });
+            } else if (score >= 12) {
+                levelMessage = "AVANZADO - ¡Muy bien! 👍";
+                levelEmoji = "📚";
+                confetti({ particleCount: 100, spread: 80, colors: ['#ffd700'] });
+            } else if (score >= 8) {
+                levelMessage = "INTERMEDIO - ¡Bien! 💪";
+                levelEmoji = "📝";
+            } else {
+                levelMessage = "BÁSICO - ¡Sigue estudiando! 📖";
+                levelEmoji = "📖";
+            }
+            
+            let html = `
+                <div class="quiz-header">
+                    <div class="quiz-title">🇪🇸 ESPAÑOL AVANZADO</div>
+                </div>
+                
+                <div class="result-screen">
+                    <div class="final-score">
+                        <div class="score-label">Tu Puntuación</div>
+                        <div class="score-number">${score}/${TOTAL_QUESTIONS}</div>
+                        <div class="level-result">${levelEmoji} ${levelMessage}</div>
+                    </div>
+                    
+                    <button class="action-btn" onclick="redirectToResultados()">
+                        🔗 VER RESULTADOS
+                    </button>
+                    
+                    <button class="action-btn secondary" onclick="redirectToShopee()">
+                        🚀 SIGUIENTE NIVEL
+                    </button>
+                    
+                    <input type="text" class="name-input" id="participantName" 
+                           placeholder="Digite seu nome">
+                    <button class="action-btn secondary" onclick="sendResults()">
+                        💾 GUARDAR RESULTADO
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('quizContent').innerHTML = html;
+        }
+
+        function redirectToResultados() {
+            window.open(RESULTADOS_LINK, '_blank');
+        }
+
+        function redirectToShopee() {
+            window.open(SHOPEE_LINK, '_blank');
+        }
+
+        function sendResults() {
+            const name = document.getElementById('participantName').value.trim();
+            if (!name) {
+                alert('¡Por favor, digite su nombre!');
+                return;
+            }
+            
+            document.getElementById('loading').style.display = 'flex';
+            
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+                alert(`¡Gracias ${name}! Tu puntuación: ${score}/${TOTAL_QUESTIONS}`);
+            }, 1000);
+        }
+
+        // Inicia o quiz
         showQuestion();
-      } else {
-        showFinalScreen();
-      }
-    }
-
-    function showFinalScreen() {
-      if (score >= 5) {
-        confetti({
-          particleCount: 100,
-          spread: 100,
-          colors: ['#000000', '#f0f0f0']
-        });
-      }
-      
-      let html = `
-        <div class="quiz-header">
-          <div class="quiz-title">QUIZ</div>
-        </div>
-        
-        <div class="result-screen">
-          <div class="final-score">
-            <div class="score-label">Sua pontuação</div>
-            <div class="score-number">${score}/${questions.length}</div>
-          </div>
-          
-          <button class="action-btn" onclick="redirectToResultados()">
-            🔗 VER RESULTADOS
-          </button>
-          
-          <button class="action-btn secondary" onclick="redirectToShopee()">
-            🚀 FAZER OUTRA ETAPA
-          </button>
-          
-          <input type="text" class="name-input" id="participantName" 
-                 placeholder="Digite seu nome">
-          <button class="action-btn secondary" onclick="sendResults()">
-            💾 SALVAR RESULTADO
-          </button>
-        </div>
-      `;
-      
-      document.getElementById('quizContent').innerHTML = html;
-    }
-
-    function redirectToResultados() {
-      window.open(resultadosLink, '_blank');
-    }
-
-    function redirectToShopee() {
-      window.open(shopeeLink, '_blank');
-    }
-
-    function sendResults() {
-      const name = document.getElementById('participantName').value.trim();
-      if (!name) {
-        alert('Por favor, digite seu nome');
-        return;
-      }
-      
-      document.getElementById('loading').style.display = 'flex';
-      
-      setTimeout(() => {
-        document.getElementById('loading').style.display = 'none';
-        alert(`¡Gracias ${name}! Pontuação: ${score}/${questions.length} 🇪🇸`);
-      }, 1000);
-    }
-
-    // Inicia o quiz
-    showQuestion();
-  </script>
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </body>
 </html>
