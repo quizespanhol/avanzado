@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Arial', 'Helvetica', sans-serif;
+      background: #1a1a1a; /* Preto */
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      position: relative;
+    }
+    
+    .quiz-container {
+      width: 100%;
+      max-width: 400px;
+      background: #2d2d2d; /* Cinza escuro */
+      border-radius: 25px;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+      border: 1px solid #444;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Header com "Quiz" centralizado */
+    .quiz-header {
+      margin-bottom: 25px;
+      text-align: center;
+      position: relative;
+    }
+    
+    .quiz-title {
+      color: #ffffff; /* BRANCO */
+      font-size: 48px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-shadow: 3px 3px 0 #000000;
+      line-height: 1;
+      text-align: center;
+    }
+    
+    /* Área da pergunta */
+    .question-area {
+      background: #3a3a3a; /* Cinza médio */
+      border-radius: 15px;
+      padding: 25px 15px;
+      margin-bottom: 25px;
+      border: 1px solid #555;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    }
+    
+    .question-text {
+      color: #ffffff; /* BRANCO */
+      font-size: 24px;
+      font-weight: 600;
+      text-align: center;
+      line-height: 1.3;
+      word-break: break-word;
+      text-shadow: 1px 1px 0 #000000;
+    }
+    
+    /* Opções de resposta */
+    .options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+    
+    .option-btn {
+      background: #3a3a3a; /* Cinza médio */
+      border: 1px solid #555;
+      border-radius: 15px;
+      padding: 18px 15px;
+      color: #ffffff; /* BRANCO */
+      font-size: 20px;
+      font-weight: 500;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+      display: block;
+      box-shadow: 0 4px 0 #1a1a1a; /* Preto */
+    }
+    
+    .option-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #1a1a1a;
+    }
+    
+    /* Estilo quando selecionada */
+    .option-btn.selected {
+      background: #4a4a4a; /* Cinza mais claro */
+      border-color: #777;
+      color: #ffffff; /* BRANCO */
+      box-shadow: 0 4px 0 #2a2a2a;
+    }
+    
+    .option-btn.selected .option-prefix {
+      background: #2d2d2d;
+      color: #ffffff;
+    }
+    
+    .option-btn.correct {
+      background: #2e7d32; /* Verde escuro */
+      border-color: #4caf50;
+      color: #ffffff;
+      box-shadow: 0 4px 0 #1b5e20;
+    }
+    
+    .option-btn.incorrect {
+      background: #c62828; /* Vermelho escuro */
+      border-color: #f44336;
+      color: #ffffff;
+      box-shadow: 0 4px 0 #8b0000;
+    }
+    
+    .option-btn:disabled {
+      opacity: 0.9;
+      cursor: default;
+      transform: none;
+    }
+    
+    /* Letras das opções (A, B, C) */
+    .option-prefix {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      background: #2d2d2d; /* Cinza escuro */
+      color: #ffffff; /* BRANCO */
+      border-radius: 10px;
+      text-align: center;
+      line-height: 40px;
+      font-size: 24px;
+      font-weight: bold;
+      margin-right: 15px;
+      box-shadow: inset 0 -2px 0 #1a1a1a;
+    }
+    
+    /* Timer */
+    .timer-container {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    
+    .timer {
+      display: inline-block;
+      background: #3a3a3a; /* Cinza médio */
+      color: #ffffff; /* BRANCO */
+      font-size: 32px;
+      font-weight: bold;
+      padding: 10px 25px;
+      border-radius: 50px;
+      border: 1px solid #555;
+      box-shadow: 0 4px 0 #1a1a1a;
+    }
+    
+    /* Loading overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9); /* Preto com transparência */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      display: none;
+    }
+    
+    .loading-content {
+      background: #2d2d2d; /* Cinza escuro */
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      color: #ffffff; /* BRANCO */
+      border: 1px solid #555;
+    }
+    
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #555;
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Tela de resultados */
+    .result-screen {
+      text-align: center;
+    }
+    
+    .final-score {
+      background: #3a3a3a; /* Cinza médio */
+      border-radius: 20px;
+      padding: 30px;
+      margin: 20px 0;
+      border: 1px solid #555;
+    }
+    
+    .score-number {
+      font-size: 80px;
+      font-weight: bold;
+      color: #ffffff; /* BRANCO */
+      line-height: 1;
+      margin: 10px 0;
+    }
+    
+    .score-label {
+      color: #ffffff; /* BRANCO */
+      font-size: 24px;
+    }
+    
+    .action-btn {
+      background: #3a3a3a; /* Cinza médio */
+      border: none;
+      border-radius: 15px;
+      padding: 18px;
+      color: #ffffff; /* BRANCO */
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      margin: 10px 0;
+      box-shadow: 0 4px 0 #1a1a1a;
+      transition: all 0.1s ease;
+      border: 1px solid #555;
+    }
+    
+    .action-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #1a1a1a;
+    }
+    
+    .action-btn.secondary {
+      background: #2d2d2d; /* Cinza escuro */
+      color: #ffffff; /* BRANCO */
+      border: 1px solid #555;
+      box-shadow: 0 4px 0 #1a1a1a;
+    }
+    
+    .name-input {
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      border-radius: 15px;
+      border: 1px solid #555;
+      background: #3a3a3a;
+      color: #ffffff; /* BRANCO */
+      margin: 10px 0;
+    }
+    
+    .name-input::placeholder {
+      color: #aaa;
+      opacity: 0.8;
+    }
+    
+    /* Ajustes para mobile */
+    @media (max-width: 400px) {
+      .quiz-title {
+        font-size: 42px;
+      }
+      
+      .question-text {
+        font-size: 22px;
+      }
+      
+      .option-btn {
+        font-size: 18px;
+        padding: 15px;
+      }
+      
+      .option-prefix {
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+        line-height: 35px;
+        margin-right: 10px;
+      }
+    }
+  </style>
+  
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+  <div class="quiz-container">
+    <div id="quizContent"></div>
+  </div>
+  
+  <div id="loading" class="loading-overlay">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <div style="font-size: 18px;">Carregando...</div>
+    </div>
+  </div>
+
+  <script>
+    // Links (você pode alterar conforme necessário)
+    const shopeeLink = "https://s.shopee.com.br/70DpcjasH2";
+    const resultadosLink = "https://s.shopee.com.br/70DpcjasH2";
+
+    // ===== 10 PERGUNTAS SOBRE ESPANHOL PARA BRASILEIROS =====
+    const questions = [
+      {
+        question: "🇪🇸 Em espanhol, 'embarazada' significa:",
+        options: ["Com vergonha", "Grávida", "Atrapalhada", "Embaraçada"],
+        answer: 2
+      },
+      {
+        question: "🇪🇸 Qual o significado de 'coger' na maioria dos países hispânicos?",
+        options: ["Pegar", "Coçar", "Sentido vulgar", "Cozinhar"],
+        answer: 3
+      },
+      {
+        question: "🇪🇸 'Éxito' em espanhol quer dizer:",
+        options: ["Saída", "Sucesso", "Exit", "Exercício"],
+        answer: 2
+      },
+      {
+        question: "🇪🇸 Como se diz 'escritório' em espanhol?",
+        options: ["Escritorio", "Oficina", "Despacho", "Negocio"],
+        answer: 2
+      },
+      {
+        question: "🇪🇸 'Constipado' em espanhol significa:",
+        options: ["Intestino preso", "Resfriado", "Prisão de ventre", "Constipação"],
+        answer: 2
+      },
+      {
+        question: "🇪🇸 Qual a tradução de 'borracha' para o espanhol?",
+        options: ["Boracha", "Goma", "Caucho", "Borracha"],
+        answer: 2
+      },
+      {
+        question: "🇪🇸 'Pelado' em espanhol pode significar:",
+        options: ["Sem roupa", "Careca", "Descascado", "Sem dinheiro"],
+        answer: 4
+      },
+      {
+        question: "🇪🇸 Como se fala 'brincadeira' em espanhol?",
+        options: ["Brincadeira", "Broma", "Juego", "Diversión"],
+        answer: 2
+      },
+      {
+        question: "🇪🇸 'Rato' em espanhol significa:",
+        options: ["Rato animal", "Momento", "Mouse", "Ratazana"],
+        answer: 2
+      },
+      {
+        question: "🇪🇸 Qual frase está gramaticalmente correta?",
+        options: ["Me llamo es Juan", "Yo llamo Juan", "Me llamo Juan", "Mi llamo Juan"],
+        answer: 3
+      }
+    ];
+
+    let current = 0;
+    let score = 0;
+    let answered = false;
+    let userAnswers = [];
+    let timer;
+    let timeLeft = 30;
+
+    function startTimer() {
+      clearInterval(timer);
+      timeLeft = 30;
+      updateTimerDisplay();
+      
+      timer = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          if (!answered) {
+            userAnswers.push(0);
+            nextQuestion();
+          }
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const timerEl = document.getElementById('timer');
+      if (timerEl) {
+        timerEl.textContent = `⏳ ${timeLeft}s`;
+      }
+    }
+
+    function showQuestion() {
+      answered = false;
+      const q = questions[current];
+      
+      let html = `
+        <div class="quiz-header">
+          <div class="quiz-title">QUIZ</div>
+        </div>
+        
+        <div class="timer-container">
+          <div class="timer" id="timer">⏳ 30s</div>
+        </div>
+        
+        <div class="question-area">
+          <div class="question-text">${q.question}</div>
+        </div>
+        
+        <div class="options-container" id="optionsContainer">
+      `;
+      
+      const letters = ['A', 'B', 'C', 'D'];
+      q.options.forEach((opt, i) => {
+        html += `
+          <button class="option-btn" onclick="selectOption(${i+1})">
+            <span class="option-prefix">${letters[i]}</span>
+            ${opt}
+          </button>
+        `;
+      });
+      
+      html += `</div>`;
+      
+      document.getElementById('quizContent').innerHTML = html;
+      startTimer();
+    }
+
+    function selectOption(selected) {
+      if (answered) return;
+      answered = true;
+      clearInterval(timer);
+      
+      const correct = questions[current].answer;
+      const buttons = document.querySelectorAll('.option-btn');
+      
+      buttons.forEach(b => b.classList.remove('selected', 'correct', 'incorrect'));
+      
+      buttons[selected-1].classList.add('selected');
+      
+      setTimeout(() => {
+        buttons.forEach((btn, i) => {
+          if (i+1 === correct) {
+            btn.classList.add('correct');
+          } else if (i+1 === selected && selected !== correct) {
+            btn.classList.add('incorrect');
+          }
+          btn.disabled = true;
+        });
+        
+        userAnswers.push(selected);
+        if (selected === correct) {
+          score++;
+          confetti({
+            particleCount: 50,
+            spread: 60,
+            colors: ['#888', '#ffffff']
+          });
+        }
+        
+        setTimeout(nextQuestion, 800);
+      }, 300);
+    }
+
+    function nextQuestion() {
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        showFinalScreen();
+      }
+    }
+
+    function showFinalScreen() {
+      if (score >= 5) {
+        confetti({
+          particleCount: 100,
+          spread: 100,
+          colors: ['#888', '#ffffff']
+        });
+      }
+      
+      let html = `
+        <div class="quiz-header">
+          <div class="quiz-title">QUIZ</div>
+        </div>
+        
+        <div class="result-screen">
+          <div class="final-score">
+            <div class="score-label">Sua pontuação</div>
+            <div class="score-number">${score}/${questions.length}</div>
+          </div>
+          
+          <button class="action-btn" onclick="redirectToResultados()">
+            🔗 VER RESULTADOS
+          </button>
+          
+          <button class="action-btn secondary" onclick="redirectToShopee()">
+            🚀 FAZER OUTRA ETAPA
+          </button>
+          
+          <input type="text" class="name-input" id="participantName" 
+                 placeholder="Digite seu nome">
+          <button class="action-btn secondary" onclick="sendResults()">
+            💾 SALVAR RESULTADO
+          </button>
+        </div>
+      `;
+      
+      document.getElementById('quizContent').innerHTML = html;
+    }
+
+    function redirectToResultados() {
+      window.open(resultadosLink, '_blank');
+    }
+
+    function redirectToShopee() {
+      window.open(shopeeLink, '_blank');
+    }
+
+    function sendResults() {
+      const name = document.getElementById('participantName').value.trim();
+      if (!name) {
+        alert('Por favor, digite seu nome');
+        return;
+      }
+      
+      document.getElementById('loading').style.display = 'flex';
+      
+      setTimeout(() => {
+        document.getElementById('loading').style.display = 'none';
+        alert(`¡Gracias ${name}! Pontuação: ${score}/${questions.length} 🇪🇸`);
+      }, 1000);
+    }
+
+    // Inicia o quiz
+    showQuestion();
+  </script>
+</body>
+</html>
