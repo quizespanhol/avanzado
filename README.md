@@ -13,7 +13,7 @@
         
         body {
             font-family: 'Arial', 'Helvetica', sans-serif;
-            background: linear-gradient(135deg, #ff0000 0%, #8b0000 100%);
+            background: #8B0000; /* Vermelho escuro sólido */
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -24,11 +24,11 @@
         .quiz-container {
             width: 100%;
             max-width: 550px;
-            background: #ffffff;
+            background: #FFFFFF; /* Branco sólido */
             border-radius: 30px;
             padding: 25px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            border: 3px solid #ffd700;
+            border: 4px solid #FFD700; /* Amarelo ouro */
         }
         
         .quiz-header {
@@ -37,13 +37,13 @@
         }
         
         .quiz-title {
-            color: #ff0000;
+            color: #FF0000; /* Vermelho vivo */
             font-size: 42px;
             font-weight: 800;
             letter-spacing: 1px;
             margin-bottom: 10px;
             text-transform: uppercase;
-            text-shadow: 2px 2px 0 #ffd700;
+            text-shadow: 2px 2px 0 #FFD700;
         }
         
         .progress-container {
@@ -52,59 +52,51 @@
             align-items: center;
             margin-bottom: 15px;
             padding: 10px 15px;
-            background: #fff5f5;
+            background: #FFF0F0; /* Rosa muito claro */
             border-radius: 60px;
-            border: 2px solid #ffd700;
+            border: 2px solid #FFD700;
         }
         
         .question-counter {
-            background: #ff0000;
+            background: #FF0000;
             color: white;
             font-size: 18px;
             font-weight: bold;
             padding: 8px 20px;
             border-radius: 40px;
-            border: 2px solid #ffd700;
+            border: 2px solid #FFD700;
+            min-width: 80px;
+            text-align: center;
         }
         
         .progress-bar {
             flex: 1;
             height: 20px;
-            background: #ffcccc;
+            background: #FFB6C1; /* Rosa claro */
             border-radius: 30px;
             margin: 0 15px;
             overflow: hidden;
-            border: 1px solid #ffd700;
+            border: 1px solid #FFD700;
         }
         
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #ff0000, #ffd700);
+            background: linear-gradient(90deg, #FF0000, #FFD700);
             width: 0%;
             transition: width 0.3s ease;
             border-radius: 30px;
         }
         
         .category-badge {
-            background: #8b0000;
+            background: #8B0000;
             color: white;
             font-size: 14px;
-            padding: 5px 15px;
+            font-weight: bold;
+            padding: 8px 15px;
             border-radius: 30px;
-            border: 1px solid #ffd700;
-        }
-        
-        .level-indicator {
-            background: #ff0000;
-            color: white;
-            font-size: 18px;
-            font-weight: 600;
-            padding: 8px 25px;
-            border-radius: 50px;
-            display: inline-block;
-            box-shadow: 0 4px 10px rgba(255,0,0,0.3);
-            border: 2px solid #ffd700;
-            margin-top: 10px;
+            border: 2px solid #FFD700;
+            min-width: 120px;
+            text-align: center;
         }
         
         .timer-container {
@@ -114,28 +106,28 @@
         
         .timer {
             display: inline-block;
-            background: #8b0000;
+            background: #8B0000;
             color: white;
             font-size: 36px;
             font-weight: bold;
             padding: 12px 30px;
             border-radius: 60px;
-            border: 2px solid #ffd700;
-            box-shadow: 0 4px 15px rgba(139,0,0,0.5);
+            border: 3px solid #FFD700;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
         
         .question-area {
-            background: #fff5f5;
+            background: #FFF5F5;
             border-radius: 20px;
             padding: 30px 20px;
             margin-bottom: 25px;
-            border-left: 5px solid #ff0000;
-            border-right: 5px solid #ffd700;
-            box-shadow: 0 5px 15px rgba(255,0,0,0.1);
+            border-left: 5px solid #FF0000;
+            border-right: 5px solid #FFD700;
+            box-shadow: 0 5px 15px rgba(255,0,0,0.2);
         }
         
         .question-text {
-            color: #8b0000;
+            color: #8B0000;
             font-size: 22px;
             font-weight: 600;
             text-align: center;
@@ -151,10 +143,10 @@
         
         .option-btn {
             background: white;
-            border: 2px solid #ffcccc;
+            border: 2px solid #FFB6C1;
             border-radius: 15px;
             padding: 18px 20px;
-            color: #8b0000;
+            color: #8B0000;
             font-size: 18px;
             font-weight: 500;
             text-align: left;
@@ -162,32 +154,32 @@
             transition: all 0.2s ease;
             width: 100%;
             display: block;
-            box-shadow: 0 4px 6px rgba(255,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(139,0,0,0.2);
         }
         
         .option-btn:hover:not(:disabled) {
-            background: #ffe6e6;
-            border-color: #ff0000;
+            background: #FFE4E1;
+            border-color: #FF0000;
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(255,0,0,0.2);
+            box-shadow: 0 6px 12px rgba(255,0,0,0.3);
         }
         
         .option-btn.selected {
-            background: #ffcccc;
-            border-color: #ff0000;
-            box-shadow: 0 4px 0 #8b0000;
+            background: #FFB6C1;
+            border-color: #FF0000;
+            box-shadow: 0 4px 0 #8B0000;
         }
         
         .option-btn.correct {
             background: #4CAF50;
-            border-color: #ffd700;
+            border-color: #FFD700;
             color: white;
             box-shadow: 0 4px 0 #2d6a2d;
         }
         
         .option-btn.incorrect {
             background: #f44336;
-            border-color: #ffd700;
+            border-color: #FFD700;
             color: white;
             box-shadow: 0 4px 0 #9a2828;
         }
@@ -202,7 +194,7 @@
             display: inline-block;
             width: 35px;
             height: 35px;
-            background: #ff0000;
+            background: #FF0000;
             color: white;
             border-radius: 10px;
             text-align: center;
@@ -210,7 +202,7 @@
             font-size: 20px;
             font-weight: bold;
             margin-right: 15px;
-            border: 1px solid #ffd700;
+            border: 2px solid #FFD700;
         }
         
         .loading-overlay {
@@ -232,14 +224,14 @@
             padding: 40px;
             border-radius: 30px;
             text-align: center;
-            border: 3px solid #ff0000;
+            border: 4px solid #FF0000;
         }
         
         .loading-spinner {
             width: 60px;
             height: 60px;
-            border: 6px solid #ffcccc;
-            border-top-color: #ff0000;
+            border: 6px solid #FFB6C1;
+            border-top-color: #FF0000;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 20px auto;
@@ -254,12 +246,12 @@
         }
         
         .final-score {
-            background: linear-gradient(135deg, #ff0000, #8b0000);
+            background: linear-gradient(135deg, #FF0000, #8B0000);
             border-radius: 25px;
             padding: 35px;
             margin: 20px 0;
             color: white;
-            border: 3px solid #ffd700;
+            border: 4px solid #FFD700;
         }
         
         .score-number {
@@ -267,7 +259,7 @@
             font-weight: bold;
             line-height: 1;
             margin: 15px 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
         
         .score-label {
@@ -279,9 +271,9 @@
             font-size: 26px;
             margin: 20px 0;
             padding: 15px;
-            background: rgba(255,215,0,0.2);
+            background: rgba(255,215,0,0.3);
             border-radius: 60px;
-            border: 2px solid #ffd700;
+            border: 2px solid #FFD700;
         }
         
         .action-btn {
@@ -289,25 +281,25 @@
             border: none;
             border-radius: 15px;
             padding: 18px;
-            color: #8b0000;
+            color: #8B0000;
             font-size: 22px;
             font-weight: bold;
             cursor: pointer;
             width: 100%;
             margin: 12px 0;
-            box-shadow: 0 4px 10px rgba(255,0,0,0.2);
-            border: 2px solid #ffd700;
+            box-shadow: 0 4px 10px rgba(139,0,0,0.3);
+            border: 3px solid #FFD700;
             transition: all 0.2s ease;
         }
         
         .action-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(255,215,0,0.4);
-            background: #fff0f0;
+            box-shadow: 0 6px 15px rgba(255,215,0,0.5);
+            background: #FFF0F0;
         }
         
         .action-btn.secondary {
-            background: #fff5f5;
+            background: #FFF5F5;
         }
         
         .name-input {
@@ -315,15 +307,22 @@
             padding: 15px;
             font-size: 18px;
             border-radius: 15px;
-            border: 2px solid #ffd700;
+            border: 3px solid #FFD700;
             margin: 10px 0;
             transition: all 0.2s ease;
+            color: #8B0000;
+            font-weight: bold;
         }
         
         .name-input:focus {
             outline: none;
-            border-color: #ff0000;
+            border-color: #FF0000;
             box-shadow: 0 0 0 3px rgba(255,215,0,0.3);
+        }
+        
+        .name-input::placeholder {
+            color: #FFB6C1;
+            font-weight: normal;
         }
         
         @media (max-width: 480px) {
@@ -331,8 +330,17 @@
             .question-text { font-size: 20px; }
             .option-btn { font-size: 16px; padding: 15px; }
             .score-number { font-size: 70px; }
-            .progress-container { flex-direction: column; gap: 10px; }
-            .progress-bar { width: 100%; margin: 10px 0; }
+            .progress-container { 
+                flex-direction: column; 
+                gap: 10px; 
+            }
+            .progress-bar { 
+                width: 100%; 
+                margin: 10px 0; 
+            }
+            .category-badge { 
+                min-width: 100%; 
+            }
         }
     </style>
 </head>
@@ -344,12 +352,12 @@
     <div id="loading" class="loading-overlay">
         <div class="loading-content">
             <div class="loading-spinner"></div>
-            <div style="font-size: 20px; color: #8b0000;">Cargando...</div>
+            <div style="font-size: 20px; color: #8B0000; font-weight: bold;">Cargando...</div>
         </div>
     </div>
 
     <script>
-        // LINKS DE REDIRECIONAMENTO
+        // LINKS DE REDIRECIONAMENTO (ALTERE AQUI)
         const SHOPEE_LINK = "https://s.shopee.com.br/70DpcjasH2";
         const RESULTADOS_LINK = "https://s.shopee.com.br/70DpcjasH2";
 
@@ -360,31 +368,31 @@
                 question: "🇪🇸 Complete con el subjuntivo: 'Espero que ___ buen viaje.'",
                 options: ["tengas", "tienes", "tener", "tenías"],
                 answer: 1,
-                category: "Subjuntivo"
+                category: "SUBJUNTIVO"
             },
             {
                 question: "🇪🇸 ¿Cuál es la forma correcta? 'Si ___ dinero, viajaría por el mundo.'",
                 options: ["tuviera", "tengo", "tendría", "tener"],
                 answer: 1,
-                category: "Condicional"
+                category: "CONDICIONAL"
             },
             {
                 question: "🇪🇸 Pretérito perfecto: 'Ya ___ (comer) cuando llegaste.'",
                 options: ["he comido", "había comido", "comí", "comeré"],
                 answer: 2,
-                category: "Pluscuamperfecto"
+                category: "PLUSCUAMPERFECTO"
             },
             {
                 question: "🇪🇸 Subjuntivo imperfecto: 'Ojalá ___ (venir) más temprano.'",
                 options: ["viniera", "venga", "vendría", "vino"],
                 answer: 1,
-                category: "Subjuntivo"
+                category: "SUBJUNTIVO"
             },
             {
                 question: "🇪🇸 Futuro perfecto: 'Para el año que viene, ya ___ (terminar) la carrera.'",
                 options: ["habré terminado", "terminaré", "he terminado", "terminaba"],
                 answer: 1,
-                category: "Futuro Perfecto"
+                category: "FUTURO PERFECTO"
             },
             
             // EXPRESSÕES IDIOMÁTICAS (6-10)
@@ -392,31 +400,31 @@
                 question: "🇪🇸 ¿Qué significa 'tomar el pelo'?",
                 options: ["Cortar el cabello", "Bromear/Engañar", "Peinarse", "Tener vergüenza"],
                 answer: 2,
-                category: "Expresiones"
+                category: "EXPRESIONES"
             },
             {
                 question: "🇪🇸 'Estar en las nubes' significa:",
                 options: ["Estar distraído", "Viajar en avión", "Estar feliz", "Tener sueño"],
                 answer: 1,
-                category: "Expresiones"
+                category: "EXPRESIONES"
             },
             {
                 question: "🇪🇸 ¿Qué es 'una ganga'?",
                 options: ["Una pandilla", "Una oferta/Baratija", "Una fruta", "Un problema"],
                 answer: 2,
-                category: "Expresiones"
+                category: "EXPRESIONES"
             },
             {
                 question: "🇪🇸 'Meter la pata' quiere decir:",
                 options: ["Cometer un error", "Patear", "Entrar en un lugar", "Bailar"],
                 answer: 1,
-                category: "Expresiones"
+                category: "EXPRESIONES"
             },
             {
                 question: "🇪🇸 'Ser un lince' significa:",
                 options: ["Ser muy astuto", "Ser un animal", "Ser perezoso", "Ser rápido"],
                 answer: 1,
-                category: "Expresiones"
+                category: "EXPRESIONES"
             },
             
             // FALSOS COGNATOS AVANÇADOS (11-15)
@@ -424,31 +432,31 @@
                 question: "🇪🇸 'Constipado' en español significa:",
                 options: ["Constipado (intestino)", "Resfriado", "Estreñido", "Congestionado"],
                 answer: 2,
-                category: "Falsos Cognatos"
+                category: "FALSOS COGNATOS"
             },
             {
                 question: "🇪🇸 'Embargado' quiere decir:",
                 options: ["Con vergüenza", "Bloqueado/Retenido", "Embarazado", "Abrazado"],
                 answer: 2,
-                category: "Falsos Cognatos"
+                category: "FALSOS COGNATOS"
             },
             {
                 question: "🇪🇸 'Bizarro' en español significa:",
                 options: ["Extraño/Raro", "Valiente", "Bizarro (estilo)", "Divertido"],
                 answer: 2,
-                category: "Falsos Cognatos"
+                category: "FALSOS COGNATOS"
             },
             {
                 question: "🇪🇸 'Exitoso' quiere decir:",
                 options: ["Saída", "Bem-sucedido", "Exercício", "Exit"],
                 answer: 2,
-                category: "Falsos Cognatos"
+                category: "FALSOS COGNATOS"
             },
             {
                 question: "🇪🇸 'Sensato' significa:",
                 options: ["Sensível", "Sensato/Juicioso", "Sensacional", "Sensível demais"],
                 answer: 2,
-                category: "Falsos Cognatos"
+                category: "FALSOS COGNATOS"
             },
             
             // GRAMÁTICA AVANÇADA (16-20)
@@ -456,31 +464,31 @@
                 question: "🇪🇸 'Le' en 'Le di el libro' es un:",
                 options: ["Objeto directo", "Objeto indirecto", "Pronombre reflexivo", "Artículo"],
                 answer: 2,
-                category: "Gramática"
+                category: "GRAMÁTICA"
             },
             {
                 question: "🇪🇸 'Se lo dije' - ¿Qué función tiene 'se'?",
                 options: ["Reflexivo", "Sustituto de 'le'", "Impersonal", "Pasivo"],
                 answer: 2,
-                category: "Gramática"
+                category: "GRAMÁTICA"
             },
             {
                 question: "🇪🇸 'Cuyo' en 'El hombre cuyo hijo llegó' se refiere a:",
                 options: ["El hombre", "El hijo", "Llegó", "Hombre e hijo"],
                 answer: 1,
-                category: "Gramática"
+                category: "GRAMÁTICA"
             },
             {
                 question: "🇪🇸 'Quizás ___ a tiempo' (llegar) - forma correcta:",
                 options: ["llegue", "llega", "llegará", "llegaba"],
                 answer: 1,
-                category: "Gramática"
+                category: "GRAMÁTICA"
             },
             {
                 question: "🇪🇸 'A pesar de ___ estudiado, no aprobó' - forma correcta:",
                 options: ["haber", "había", "ha", "habrá"],
                 answer: 1,
-                category: "Gramática"
+                category: "GRAMÁTICA"
             }
         ];
 
@@ -491,25 +499,6 @@
         let userAnswers = [];
         let timer;
         let timeLeft = 50;
-
-        function updateProgress() {
-            const progressFill = document.querySelector('.progress-fill');
-            const questionCounter = document.querySelector('.question-counter');
-            const categoryBadge = document.querySelector('.category-badge');
-            
-            if (progressFill) {
-                const progress = ((current + 1) / TOTAL_QUESTIONS) * 100;
-                progressFill.style.width = `${progress}%`;
-            }
-            
-            if (questionCounter) {
-                questionCounter.textContent = `${current + 1}/${TOTAL_QUESTIONS}`;
-            }
-            
-            if (categoryBadge && current < TOTAL_QUESTIONS) {
-                categoryBadge.textContent = questions[current].category;
-            }
-        }
 
         function startTimer() {
             clearInterval(timer);
@@ -603,11 +592,13 @@
                 userAnswers.push(selected);
                 if (selected === correct) {
                     score++;
-                    confetti({
-                        particleCount: 30,
-                        spread: 50,
-                        colors: ['#ff0000', '#ffd700']
-                    });
+                    if (typeof confetti !== 'undefined') {
+                        confetti({
+                            particleCount: 30,
+                            spread: 50,
+                            colors: ['#FF0000', '#FFD700']
+                        });
+                    }
                 }
                 
                 setTimeout(nextQuestion, 800);
@@ -630,11 +621,15 @@
             if (score >= 16) {
                 levelMessage = "MAESTRO - ¡Excelente! 🌟";
                 levelEmoji = "🏆";
-                confetti({ particleCount: 200, spread: 120, colors: ['#ff0000', '#ffd700'] });
+                if (typeof confetti !== 'undefined') {
+                    confetti({ particleCount: 200, spread: 120, colors: ['#FF0000', '#FFD700'] });
+                }
             } else if (score >= 12) {
                 levelMessage = "AVANZADO - ¡Muy bien! 👍";
                 levelEmoji = "📚";
-                confetti({ particleCount: 100, spread: 80, colors: ['#ffd700'] });
+                if (typeof confetti !== 'undefined') {
+                    confetti({ particleCount: 100, spread: 80, colors: ['#FFD700'] });
+                }
             } else if (score >= 8) {
                 levelMessage = "INTERMEDIO - ¡Bien! 💪";
                 levelEmoji = "📝";
@@ -697,9 +692,22 @@
             }, 1000);
         }
 
+        // Carrega a biblioteca de confete e inicia o quiz
+        function loadConfettiAndStart() {
+            if (typeof confetti === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js';
+                script.onload = function() {
+                    showQuestion();
+                };
+                document.head.appendChild(script);
+            } else {
+                showQuestion();
+            }
+        }
+
         // Inicia o quiz
-        showQuestion();
+        loadConfettiAndStart();
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </body>
 </html>
